@@ -1915,7 +1915,9 @@ all_sprites.add(mapbackground, sword, arrow, rock, rock2, rock3, octoroc, octoro
 running = True
 # Our main loop
 screen.fill((0,0,0))
-display_surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
+display_surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT)
+,pygame.FULLSCREEN
+                                         )
 
 #This is the game loop
 while running:
