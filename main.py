@@ -420,8 +420,18 @@ class Sword(pygame.sprite.Sprite):
     def checkCollision(self, sprite1, sprite2):
         if not pressed_keys[K_SPACE]:
             col = pygame.sprite.collide_rect(sprite1, sprite2)
-            if col == True:
-                pass
+            if col == True and sprite2 == octoroc:
+                Octoroc.death == True
+                Octoroc.rect.move_ip(-10000, -10000)
+                Rock.rect.move_ip(-10000, -10000)
+            elif col == True and sprite2 == octoroc2:
+                Octoroc2.death == True
+                Octoroc2.rect.move_ip(-10000, -10000)
+                Rock2.rect.move_ip(-10000, -10000)
+            elif col == True and sprite2 == octoroc3:
+                Octoroc3.death == True
+                Octoroc3.rect.move_ip(-10000, -10000)
+                Rock3.rect.move_ip(-10000, -10000)
         else:
             pass
 
@@ -542,24 +552,18 @@ class Arrow(pygame.sprite.Sprite):
         if col == True and sprite2 == octoroc:
             Octoroc.death == True
             self.rect.center = Player.rect.center
-            octoroc.rect.move(-10000,-10000)
-            rock.rect.move(-10000,-10000)
-            octoroc.kill()
-            rock.kill()
+            Octoroc.rect.move_ip(-10000,-10000)
+            Rock.rect.move_ip(-10000,-10000)
         elif col == True and sprite2 == octoroc2:
             Octoroc2.death==True
             self.rect.center = Player.rect.center
-            octoroc2.rect.move(-10000,-10000)
-            rock2.rect.move(-10000,-10000)
-            octoroc2.kill()
-            rock2.kill()
+            Octoroc2.rect.move_ip(-10000,-10000)
+            Rock2.rect.move_ip(-10000,-10000)
         elif col == True and sprite2 == octoroc3:
             Octoroc3.death == True
             self.rect.center = Player.rect.center
-            octoroc3.rect.move(-10000,-10000)
-            rock3.rect.move(-10000,-10000)
-            octoroc3.kill()
-            rock3.kill()
+            Octoroc3.rect.move_ip(-10000,-10000)
+            Rock3.rect.move_ip(-10000,-10000)
 
 
     def update(self, pressed_keys):
@@ -761,8 +765,10 @@ class Swordhud(pygame.sprite.Sprite):
         Swordhud.rect = self.surf.get_rect()
 
     def update(self):
-        if stage=='Play':
+        if stage=='Play' and Player.hassword:
             self.rect.center=(330,66)
+        else:
+            self.rect.center=(-1000,-1000)
         if Swordupgrade.foundcount >= 1:
             self.surf = pygame.image.load(swordhudimgs[1]).convert()
         else:
@@ -793,11 +799,26 @@ class Mapbackground(pygame.sprite.Sprite):
     # Move the map based on player location
     def update(self, playerX, playerY):
         if not stage == 'Menu':
+            print((Mapbackground.rect.x, Mapbackground.rect.y))
+            print( ( round(Mapbackground.startingX + (7*SCREEN_WIDTH)) , Mapbackground.startingY - round(SCREEN_HEIGHT-SCREEN_HEIGHT/4)))
             if playerY <= SCREEN_HEIGHT/4:
-                self.rect.move_ip(0, +(SCREEN_HEIGHT-SCREEN_HEIGHT/4))
-                Octoroc.rect.move_ip(0, +(SCREEN_HEIGHT-SCREEN_HEIGHT/4))
-                Octoroc2.rect.move_ip(0, +(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
-                Octoroc3.rect.move_ip(0, +(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
+                self.rect.move_ip(0, +(SCREEN_HEIGHT-SCREEN_HEIGHT/4)+1)
+                if ((Mapbackground.rect.x, Mapbackground.rect.y) == (Mapbackground.startingX, Mapbackground.startingY)) or Player.incave == True or ((Mapbackground.rect.x,Mapbackground.rect.y) == ( round(Mapbackground.startingX + (7*SCREEN_WIDTH)) , Mapbackground.startingY - round(SCREEN_HEIGHT-SCREEN_HEIGHT/4)) ):
+                    print('This is true!')
+                    Octoroc.death = True
+                    Octoroc2.death = True
+                    Octoroc3.death = True
+                    Octoroc.rect.move_ip(-10000, -10000)
+                    Octoroc2.rect.move_ip(-10000, -10000)
+                    Octoroc3.rect.move_ip(-10000, -10000)
+                else:
+                    Octoroc.death = False
+                    Octoroc2.death = False
+                    Octoroc3.death = False
+                    Octoroc.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                    Octoroc2.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                    Octoroc3.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+
                 Rock.rect.move_ip(0, +(SCREEN_HEIGHT-SCREEN_HEIGHT/4))
                 Rock2.rect.move_ip(0, +(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
                 Rock3.rect.move_ip(0, +(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
@@ -805,10 +826,22 @@ class Mapbackground(pygame.sprite.Sprite):
                 Swordupgrade.rect.move_ip(0, +(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
             elif playerY >= SCREEN_HEIGHT-64:
                 if self.rect.x!=Mapbackground.startingX +(7*SCREEN_WIDTH) and self.rect.y != Mapbackground.startingY - (SCREEN_HEIGHT-SCREEN_HEIGHT/4):
-                    self.rect.move_ip(0,-(SCREEN_HEIGHT-SCREEN_HEIGHT/4))
-                    Octoroc.rect.move_ip(0, -(SCREEN_HEIGHT-SCREEN_HEIGHT/4))
-                    Octoroc2.rect.move_ip(0, -(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
-                    Octoroc3.rect.move_ip(0, -(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
+                    self.rect.move_ip(0,-(SCREEN_HEIGHT-SCREEN_HEIGHT/4)-1)
+                    if ((Mapbackground.rect.x, Mapbackground.rect.y) == (Mapbackground.startingX, Mapbackground.startingY)) or Player.incave == True or ((Mapbackground.rect.x,Mapbackground.rect.y) == ( round(Mapbackground.startingX + (7*SCREEN_WIDTH)) , Mapbackground.startingY - round(SCREEN_HEIGHT-SCREEN_HEIGHT/4)) ):
+                        print('This is true!')
+                        Octoroc.death = True
+                        Octoroc2.death = True
+                        Octoroc3.death = True
+                        Octoroc.rect.move_ip(-10000, -10000)
+                        Octoroc2.rect.move_ip(-10000, -10000)
+                        Octoroc3.rect.move_ip(-10000, -10000)
+                    else:
+                        Octoroc.death = False
+                        Octoroc2.death = False
+                        Octoroc3.death = False
+                        Octoroc.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                        Octoroc2.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                        Octoroc3.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
                     Rock.rect.move_ip(0, -(SCREEN_HEIGHT-SCREEN_HEIGHT/4))
                     Rock2.rect.move_ip(0, -(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
                     Rock3.rect.move_ip(0, -(SCREEN_HEIGHT - SCREEN_HEIGHT / 4))
@@ -820,20 +853,44 @@ class Mapbackground(pygame.sprite.Sprite):
                     FirstSword.rect.center=(-100000,-100000)
                     MiniMap.rect.move_ip(0, -10)
             elif playerX <= 16:
-                self.rect.move_ip(+SCREEN_WIDTH, 0)
-                Octoroc.rect.move_ip(+SCREEN_WIDTH, 0)
-                Octoroc2.rect.move_ip(+SCREEN_WIDTH, 0)
-                Octoroc3.rect.move_ip(+SCREEN_WIDTH, 0)
+                self.rect.move_ip(+SCREEN_WIDTH+1, 0)
+                if ((Mapbackground.rect.x, Mapbackground.rect.y) == (Mapbackground.startingX, Mapbackground.startingY)) or Player.incave == True or ((Mapbackground.rect.x,Mapbackground.rect.y) == ( round(Mapbackground.startingX + (7*SCREEN_WIDTH)) , Mapbackground.startingY - round(SCREEN_HEIGHT-SCREEN_HEIGHT/4)) ):
+                    print('This is true!')
+                    Octoroc.death = True
+                    Octoroc2.death = True
+                    Octoroc3.death = True
+                    Octoroc.rect.move_ip(-10000, -10000)
+                    Octoroc2.rect.move_ip(-10000, -10000)
+                    Octoroc3.rect.move_ip(-10000, -10000)
+                else:
+                    Octoroc.death = False
+                    Octoroc2.death = False
+                    Octoroc3.death = False
+                    Octoroc.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                    Octoroc2.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                    Octoroc3.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
                 Rock.rect.move_ip(+SCREEN_WIDTH, 0)
                 Rock2.rect.move_ip(+SCREEN_WIDTH, 0)
                 Rock3.rect.move_ip(+SCREEN_WIDTH, 0)
                 Key.rect.move_ip(+SCREEN_WIDTH, 0)
                 Swordupgrade.rect.move_ip(+SCREEN_WIDTH, 0)
             elif playerX >= SCREEN_WIDTH-64:
-                self.rect.move_ip(-SCREEN_WIDTH, 0)
-                Octoroc.rect.move_ip(-SCREEN_WIDTH, 0)
-                Octoroc2.rect.move_ip(-SCREEN_WIDTH, 0)
-                Octoroc3.rect.move_ip(-SCREEN_WIDTH, 0)
+                self.rect.move_ip(-SCREEN_WIDTH-1, 0)
+                if ((Mapbackground.rect.x, Mapbackground.rect.y) == (Mapbackground.startingX, Mapbackground.startingY)) or Player.incave == True or ((Mapbackground.rect.x,Mapbackground.rect.y) == ( round(Mapbackground.startingX + (7*SCREEN_WIDTH)) , Mapbackground.startingY - round(SCREEN_HEIGHT-SCREEN_HEIGHT/4)) ):
+                    print('This is true!')
+                    Octoroc.death = True
+                    Octoroc2.death = True
+                    Octoroc3.death = True
+                    Octoroc.rect.move_ip(-10000, -10000)
+                    Octoroc2.rect.move_ip(-10000, -10000)
+                    Octoroc3.rect.move_ip(-10000, -10000)
+                else:
+                    Octoroc.death = False
+                    Octoroc2.death = False
+                    Octoroc3.death = False
+                    Octoroc.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                    Octoroc2.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
+                    Octoroc3.rect.center = (random.randint(100, SCREEN_WIDTH),random.randint(int(SCREEN_HEIGHT / 4) + 100, int(SCREEN_HEIGHT - 100)))
                 Rock.rect.move_ip(-SCREEN_WIDTH, 0)
                 Rock2.rect.move_ip(-SCREEN_WIDTH, 0)
                 Rock3.rect.move_ip(-SCREEN_WIDTH, 0)
@@ -1129,23 +1186,18 @@ class Octoroc(pygame.sprite.Sprite):
             col = pygame.sprite.collide_rect(sprite1, sprite2)
             if col == True:
                 Octoroc.death=True
-                Octoroc.rect.move(-10000, -10000)
-                Rock.rect.move(-10000, -10000)
-                octoroc.kill()
-                rock.kill()
+                Octoroc.rect.move_ip(-10000, -10000)
+                Rock.rect.move_ip(-10000, -10000)
         else:
             pass
 
     # Move the sprite based on keypresses
     def update(self):
         if stage == 'Play' and self.stepping == 0:
-            self.rect.center = (random.randint(100, SCREEN_WIDTH - 100), random.randint( int(SCREEN_HEIGHT/4)+100 , int(SCREEN_HEIGHT-100))-300)
             self.stepping = 1
         elif Octoroc.death == True:
             Octoroc.rect.move(-10000, -10000)
             Rock.rect.move(-10000, -10000)
-            octoroc.kill()
-            rock.kill()
         else:
             if self.stepping %100==0:
                 Octoroc.randdirection=random.randint(1,5)
@@ -1360,23 +1412,18 @@ class Octoroc2(pygame.sprite.Sprite):
             col = pygame.sprite.collide_rect(sprite1, sprite2)
             if col == True:
                 Octoroc2.death = True
-                Octoroc2.rect.move(-10000, -10000)
-                Rock2.rect.move(-10000, -10000)
-                octoroc2.kill()
-                rock2.kill()
+                Octoroc2.rect.move_ip(-10000, -10000)
+                Rock2.rect.move_ip(-10000, -10000)
         else:
             pass
 
     # Move the sprite based on keypresses
     def update(self):
         if stage == 'Play' and self.stepping == 0:
-            self.rect.center = (random.randint(100, SCREEN_WIDTH - 100), random.randint( int(SCREEN_HEIGHT/4)+100 , int(SCREEN_HEIGHT-100))-300)
             self.stepping = 1
         elif self.death==True:
             Octoroc2.rect.move(-10000, -10000)
             Rock2.rect.move(-10000, -10000)
-            self.kill()
-            rock2.kill()
         else:
             if self.stepping %100==0:
                 Octoroc2.randdirection=random.randint(1,5)
@@ -1588,17 +1635,13 @@ class Octoroc3(pygame.sprite.Sprite):
             col = pygame.sprite.collide_rect(sprite1, sprite2)
             if col == True:
                 Octoroc3.death = True
-                Octoroc3.rect.move(-10000,-10000)
-                Rock3.rect.move(-10000, -10000)
-                octoroc3.kill()
-                rock3.kill()
+                Octoroc3.rect.move_ip(-10000,-10000)
+                Rock3.rect.move_ip(-10000, -10000)
         else:
             pass
-
     # Move the sprite based on keypresses
     def update(self):
         if stage == 'Play' and self.stepping == 0:
-            self.rect.center= (random.randint(100, SCREEN_WIDTH - 100)-600, random.randint(int(SCREEN_HEIGHT/4)+100 , int(SCREEN_HEIGHT-100)))
             self.stepping= 1
         elif Octoroc3.death==True:
             Octoroc3.rect.move(-10000, -10000)
